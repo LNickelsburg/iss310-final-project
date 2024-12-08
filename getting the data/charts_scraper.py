@@ -9,7 +9,7 @@ HEADERS = {
     "accept-encoding": "gzip, deflate, br, zstd",
     "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
     "app-platform": "Browser",
-    "authorization": "Bearer BQC7poeFpmHwVMD16yml40xaE4GwMmVJm6Wl7EdIkkYka9WaNmH2BCaGsioY75rE4s04RUUKGDU7C933ahc2A7O9TLdO2Qdugr2EAjAWMFGvB0H6WDUs5sFd-bwpjcLiae29DYVqyRI0t3NLloX_Lkn3mxUEIAR8jWcHy-Fr9aUsmJtE8WvfwpdvxZMh1eVGst6Zi0BR",  # Replace with a valid token
+    "authorization": "Bearer BQCiQbWB2G1npVR6oMRlsbgeRGG9s7O6IxEoTpCFZGh0XhYafKNd8OrTsapaR2bItF8q8YlV8gcRVuCp1CI02MPd9KPRzWkqQMxMcfag_6Wwox8FCEj38aczlaYcCSH50hGmROFl7u0m9z-Nn9_K5Amxmzzaa7HXrx-L7E3v6GfDTbl1m1OZHLZ0GGL1R7Y2e08k5TT6",  # Replace with a valid token
     "content-type": "application/json",
     "origin": "https://charts.spotify.com",
     "priority": "u=1, i",
@@ -25,7 +25,6 @@ HEADERS = {
 }
 QUERY_TYPES = ["regional", "citytoptrack"]
 COUNTRIES = {
-    "Global": "GLOBAL",
     "Argentina": "AR",
     "Australia": "AU",
     "Austria": "AT",
@@ -146,8 +145,7 @@ def get_charts(url, headers):
     else: return None
 
 def chart_to_csv(df, path):
-    print("to csv")
-    path = f"charts/{path}"
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/charts/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -164,12 +162,10 @@ def query(num_weeks, world, country, city):
     dates = generate_dates(num_weeks)
     
     for date in dates:
-        print(f"Querying for {date}...")
         if world:
             url = set_url('regional', 'global', date)
             results = get_charts(url, HEADERS)
             path = set_path('world', 'global', date)
-            print(f"chart to csv for global at {path}")
             chart_to_csv(results, path)
         if country:
             for country in COUNTRIES:
@@ -189,10 +185,10 @@ def query(num_weeks, world, country, city):
 if __name__ == '__main__':
 
     ### set parameters ###
-    num_weeks = 1   
+    num_weeks = 2 
     world = True
-    country = False
-    city = False
+    country = True
+    city = True
     ######################
 
     query(num_weeks, world, country, city)
