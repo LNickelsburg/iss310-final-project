@@ -146,6 +146,8 @@ def get_charts(url, headers):
     else: return None
 
 def chart_to_csv(df, path):
+    print("to csv")
+    path = f"charts/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -162,10 +164,12 @@ def query(num_weeks, world, country, city):
     dates = generate_dates(num_weeks)
     
     for date in dates:
+        print(f"Querying for {date}...")
         if world:
             url = set_url('regional', 'global', date)
             results = get_charts(url, HEADERS)
             path = set_path('world', 'global', date)
+            print(f"chart to csv for global at {path}")
             chart_to_csv(results, path)
         if country:
             for country in COUNTRIES:
@@ -185,10 +189,10 @@ def query(num_weeks, world, country, city):
 if __name__ == '__main__':
 
     ### set parameters ###
-    num_weeks = 2   
+    num_weeks = 1   
     world = True
-    country = True
-    city = True
+    country = False
+    city = False
     ######################
 
     query(num_weeks, world, country, city)
