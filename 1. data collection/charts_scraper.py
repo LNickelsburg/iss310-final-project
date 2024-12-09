@@ -232,5 +232,5 @@ if __name__ == '__main__':
     city = True
 
     results = query(authorization, num_weeks, world, country, city)
-    results_to_csv(results, "charts_data.csv")
+    results_to_csv(results, "data/charts_data.csv")
     
