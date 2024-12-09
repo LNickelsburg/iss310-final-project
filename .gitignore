@@ -1,5 +1,4 @@
 
 .venv
-raw data/
 __pycache__
 .cache

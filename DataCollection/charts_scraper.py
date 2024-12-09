@@ -150,7 +150,7 @@ def request_charts(url, headers):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json() 
-        entries = data.get("entries", [])  # Adjust key based on the API's JSON response
+        entries = data.get("entries", []) 
         df = pd.DataFrame(entries)
         return df
     else: return None
@@ -159,15 +159,19 @@ def clean_results(df):
     chart_entry_data = pd.json_normalize(df['chartEntryData'])
     track_metadata = pd.json_normalize(df['trackMetadata'])
     flattened = pd.concat([df.drop(['chartEntryData', 'missingRequiredFields', 'trackMetadata'], axis=1), chart_entry_data, track_metadata], axis=1)
-    clean_results = flattened[['currentRank', 'trackName', 'trackUri', 'artists', 'releaseDate']]
-    return clean_results
+    flattened = flattened[['currentRank', 'trackUri']]
+
+    output = []
+    for i in range(len(flattened)):
+        output.append(flattened.iloc[i].to_dict())
+    return output
 
 def results_to_csv(df, path):
-    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/charts/{path}"
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
-
+    
 ### QUERY ###
 
 def query(authorization, num_weeks, world, country, city):
@@ -178,7 +182,8 @@ def query(authorization, num_weeks, world, country, city):
     charts_data = {
         "date": [],
         "region": [],
-        "details": []
+        "rank": [],
+        "uri": []
     }
 
     for date in dates:
@@ -188,11 +193,11 @@ def query(authorization, num_weeks, world, country, city):
             charts = request_charts(url, headers)
             if charts is not None:
                 results = clean_results(charts)
-            else:
-                results = None
-            charts_data["date"].append(date)
-            charts_data["region"].append("global")
-            charts_data["details"].append(results)
+                for result in results:
+                    charts_data["date"].append(date)
+                    charts_data["region"].append("global")
+                    charts_data["rank"].append(result["currentRank"])
+                    charts_data["uri"].append(result["trackUri"])
         if country:
             print("Querying country data...")
             for country in COUNTRIES:
@@ -200,11 +205,11 @@ def query(authorization, num_weeks, world, country, city):
                 charts = request_charts(url, headers)
                 if charts is not None:
                     results = clean_results(charts)
-                else:
-                    results = None
-                charts_data["date"].append(date)
-                charts_data["region"].append(country)
-                charts_data["details"].append(results)
+                    for result in results:
+                        charts_data["date"].append(date)
+                        charts_data["region"].append(country)
+                        charts_data["rank"].append(result["currentRank"])
+                        charts_data["uri"].append(result["trackUri"])
         if city:
             print("Querying city data...")
             for state in CITIES:    
@@ -213,24 +218,28 @@ def query(authorization, num_weeks, world, country, city):
                     charts = request_charts(url, headers)
                     if charts is not None:
                         results = clean_results(charts)
-                    else:
-                        results = None
-                    charts_data["date"].append(date)
-                    charts_data["region"].append(city)
-                    charts_data["details"].append(results)
+                        for result in results:
+                            charts_data["date"].append(date)
+                            charts_data["region"].append(city)
+                            charts_data["rank"].append(result["currentRank"])
+                            charts_data["uri"].append(result["trackUri"])
+                    
     print("Query complete.")
-    return pd.DataFrame(charts_data)
+    #print(charts_data)
+    output = pd.DataFrame(charts_data)
+    print(output)
+    results_to_csv(output, "data/charts.csv")
 
 
 
 if __name__ == '__main__':
 
-    authorization = "Bearer BQA687QiS7rhtRJUwWvqSFtWSgDDU4zBYf-g1pDExmLb4nOlhoFCIQoVsXVkzsJTkE3w87O3aYE834PAYDZDBYkXo_36LxSwq2FNf8gsNrzHdGHzytH61fsxSnQxaLNNob-eCYfknS0U9ypIvXZ1U20xHkmFNG3WvxHmzYmTiKwocb1kxTOWqYIupKUzLHFbjtX3bH6I"
+    authorization = "Bearer BQDFwm-7xB67fFMSH0ssJ95X8SL_dAgrVfK45Agl6TQBZW0wug1cMYimjpX3w_MDp5tort3PDPYXz_k3vt2Z3nrIM-chbVm8fW15-PoMe-S69yRQ39jpcZZh14GrKKyYzNFba-TeMlGi69W2dA8UtSxHrq5W2kLUJc_nUc3SxIwdfshvTC5UK9nclr3873xV8orb1NOm"
     num_weeks = 2
     world = True
     country = True
     city = True
 
-    results = query(authorization, num_weeks, world, country, city)
-    results_to_csv(results, "data/charts_data.csv")
+    query(authorization, num_weeks, world, country, city)
+    
     
