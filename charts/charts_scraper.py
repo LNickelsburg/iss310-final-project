@@ -9,7 +9,7 @@ HEADERS = {
     "accept-encoding": "gzip, deflate, br, zstd",
     "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
     "app-platform": "Browser",
-    "authorization": "Bearer BQCiQbWB2G1npVR6oMRlsbgeRGG9s7O6IxEoTpCFZGh0XhYafKNd8OrTsapaR2bItF8q8YlV8gcRVuCp1CI02MPd9KPRzWkqQMxMcfag_6Wwox8FCEj38aczlaYcCSH50hGmROFl7u0m9z-Nn9_K5Amxmzzaa7HXrx-L7E3v6GfDTbl1m1OZHLZ0GGL1R7Y2e08k5TT6",  # Replace with a valid token
+    "authorization": "",
     "content-type": "application/json",
     "origin": "https://charts.spotify.com",
     "priority": "u=1, i",
@@ -126,7 +126,10 @@ CITIES = {
 }
 
 
-def generate_dates(n):
+
+### PARAMS ###
+
+def set_dates(n):
     today = datetime.now()
     last_thursday = today - timedelta(days=(today.weekday() - 3) % 7)
     dates = [(last_thursday - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(n)]
@@ -135,7 +138,15 @@ def generate_dates(n):
 def set_url(query_type, region, date):
     return URL.format(query_type=query_type, region=region, date=date)
 
-def get_charts(url, headers):
+def set_headers(authorization):
+    headers = HEADERS.copy()
+    headers["authorization"] = authorization
+    return headers
+
+
+### HELPERS ###
+
+def request_charts(url, headers):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json() 
@@ -144,51 +155,82 @@ def get_charts(url, headers):
         return df
     else: return None
 
-def chart_to_csv(df, path):
+def clean_results(df):
+    chart_entry_data = pd.json_normalize(df['chartEntryData'])
+    track_metadata = pd.json_normalize(df['trackMetadata'])
+    flattened = pd.concat([df.drop(['chartEntryData', 'missingRequiredFields', 'trackMetadata'], axis=1), chart_entry_data, track_metadata], axis=1)
+    clean_results = flattened[['currentRank', 'trackName', 'trackUri', 'artists', 'releaseDate']]
+    return clean_results
+
+def results_to_csv(df, path):
     path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/charts/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
-def set_path(query_type, region, date):
-    return f"{query_type}_{region}_{date}.csv"
 
-def query(num_weeks, world, country, city):
+### QUERY ###
 
-    if num_weeks < 1:
-        raise ValueError("The number of weeks must be at least 1.")
-    if not (world or country or city):
-        raise ValueError("At least one of 'world', 'country', or 'city' must be True.")
-    
-    dates = generate_dates(num_weeks)
-    
+def query(authorization, num_weeks, world, country, city):
+
+    headers = set_headers(authorization)
+    dates = set_dates(num_weeks)
+
+    charts_data = {
+        "date": [],
+        "region": [],
+        "details": []
+    }
+
     for date in dates:
+        print(f"Querying data for {date}...")
         if world:
             url = set_url('regional', 'global', date)
-            results = get_charts(url, HEADERS)
-            path = set_path('world', 'global', date)
-            chart_to_csv(results, path)
+            charts = request_charts(url, headers)
+            if charts is not None:
+                results = clean_results(charts)
+            else:
+                results = None
+            charts_data["date"].append(date)
+            charts_data["region"].append("global")
+            charts_data["details"].append(results)
         if country:
+            print("Querying country data...")
             for country in COUNTRIES:
                 url = set_url('regional', COUNTRIES[country], date)
-                results = get_charts(url, HEADERS)
-                path = set_path('country', country, date)
-                chart_to_csv(results, path)
+                charts = request_charts(url, headers)
+                if charts is not None:
+                    results = clean_results(charts)
+                else:
+                    results = None
+                charts_data["date"].append(date)
+                charts_data["region"].append(country)
+                charts_data["details"].append(results)
         if city:
-            for state in CITIES:
+            print("Querying city data...")
+            for state in CITIES:    
                 for city in CITIES[state]:
                     url = set_url('citytoptrack', city, date)
-                    results = get_charts(url, HEADERS)
-                    path = set_path('city', city, date)
-                    chart_to_csv(results, path)
+                    charts = request_charts(url, headers)
+                    if charts is not None:
+                        results = clean_results(charts)
+                    else:
+                        results = None
+                    charts_data["date"].append(date)
+                    charts_data["region"].append(city)
+                    charts_data["details"].append(results)
+    print("Query complete.")
+    return pd.DataFrame(charts_data)
+
 
 
 if __name__ == '__main__':
 
-    ### set parameters ###
-    num_weeks = 2 
+    authorization = "Bearer BQA687QiS7rhtRJUwWvqSFtWSgDDU4zBYf-g1pDExmLb4nOlhoFCIQoVsXVkzsJTkE3w87O3aYE834PAYDZDBYkXo_36LxSwq2FNf8gsNrzHdGHzytH61fsxSnQxaLNNob-eCYfknS0U9ypIvXZ1U20xHkmFNG3WvxHmzYmTiKwocb1kxTOWqYIupKUzLHFbjtX3bH6I"
+    num_weeks = 2
     world = True
     country = True
     city = True
-    ######################
 
-    query(num_weeks, world, country, city)
+    results = query(authorization, num_weeks, world, country, city)
+    results_to_csv(results, "charts_data.csv")
+    
