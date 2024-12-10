@@ -132,7 +132,7 @@ CITIES = {
 def set_dates(n):
     today = datetime.now()
     last_thursday = today - timedelta(days=(today.weekday() - 3) % 7)
-    dates = [(last_thursday - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(n)]
+    dates = [(last_thursday - timedelta(weeks=26*i)).strftime("%Y-%m-%d") for i in range(n)]
     return dates
 
 def set_url(query_type, region, date):
