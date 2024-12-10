@@ -32,14 +32,14 @@ def agg_regional_info(data):
     data['release_date'] = pd.to_datetime(data['release_date'], errors='coerce')
     data['release_date'] = data['release_date'].map(lambda x: x.timestamp() if pd.notnull(x) else None)
 
-    agg_data = data.groupby(['region', 'chart_date']).agg(
+    agg_data = data.groupby(['scope', 'region', 'chart_date']).agg(
         num_tracks=('uri', 'count'),
         avg_popularity=('popularity', 'mean'),
         avg_release_date=('release_date', 'mean')
     ).reset_index()
 
-    genre_counts = (data.groupby(['region', 'chart_date'])['genre'].apply(lambda x: {'genre_counts': label_counter(x)}).reset_index())
-    genre_counts = genre_counts.drop(columns=['level_2'])
+    genre_counts = (data.groupby(['scope', 'region', 'chart_date'])['genre'].apply(lambda x: {'genre_counts': label_counter(x)}).reset_index())
+    genre_counts = genre_counts.drop(columns=['level_3'])
     genre_counts.rename(columns={'genre': 'genre_counts'}, inplace=True)
     agg_data = pd.merge(agg_data, genre_counts, on=['region', 'chart_date'], how='left')
     
@@ -53,7 +53,7 @@ def agg_regional_features(data):
     data['release_date'] = pd.to_datetime(data['release_date'], errors='coerce')
     data['release_date'] = data['release_date'].map(lambda x: x.timestamp() if pd.notnull(x) else None)
 
-    agg_data = data.groupby(['region', 'chart_date']).agg(
+    agg_data = data.groupby(['scope', 'region', 'chart_date']).agg(
         num_tracks=('uri', 'count'),
         avg_popularity=('popularity', 'mean'),
         avg_release_date=('release_date', 'mean'),
@@ -68,22 +68,22 @@ def agg_regional_features(data):
         avg_tempo=('tempo', 'mean')
     ).reset_index()
 
-    key_counts = (data.groupby(['region', 'chart_date'])['key'].apply(lambda x: {'key_counts': label_counter(x)}).reset_index())
-    key_counts = key_counts.drop(columns=['level_2'])
+    key_counts = (data.groupby(['scope', 'region', 'chart_date'])['key'].apply(lambda x: {'key_counts': label_counter(x)}).reset_index())
+    key_counts = key_counts.drop(columns=['level_3'])
     key_counts.rename(columns={'key': 'key_counts'}, inplace=True)
-    mode_counts = (data.groupby(['region', 'chart_date'])['mode'].apply(lambda x: {'mode_counts': label_counter(x)}).reset_index())
-    mode_counts = mode_counts.drop(columns=['level_2'])
+    mode_counts = (data.groupby(['scope', 'region', 'chart_date'])['mode'].apply(lambda x: {'mode_counts': label_counter(x)}).reset_index())
+    mode_counts = mode_counts.drop(columns=['level_3'])
     mode_counts.rename(columns={'mode': 'mode_counts'}, inplace=True)
-    time_signature_counts = (data.groupby(['region', 'chart_date'])['time_signature'].apply(lambda x: {'time_signature_counts': label_counter(x)}).reset_index())
-    time_signature_counts = time_signature_counts.drop(columns=['level_2'])
+    time_signature_counts = (data.groupby(['scope', 'region', 'chart_date'])['time_signature'].apply(lambda x: {'time_signature_counts': label_counter(x)}).reset_index())
+    time_signature_counts = time_signature_counts.drop(columns=['level_3'])
     time_signature_counts.rename(columns={'time_signature': 'time_signature_counts'}, inplace=True)
-    genre_counts = (data.groupby(['region', 'chart_date'])['genre'].apply(lambda x: {'genre_counts': label_counter(x)}).reset_index())
-    genre_counts = genre_counts.drop(columns=['level_2'])
+    genre_counts = (data.groupby(['scope', 'region', 'chart_date'])['genre'].apply(lambda x: {'genre_counts': label_counter(x)}).reset_index())
+    genre_counts = genre_counts.drop(columns=['level_3'])
     genre_counts.rename(columns={'genre': 'genre_counts'}, inplace=True)
-    agg_data = pd.merge(agg_data, key_counts, on=['region', 'chart_date'], how='left')
-    agg_data = pd.merge(agg_data, mode_counts, on=['region', 'chart_date'], how='left')
-    agg_data = pd.merge(agg_data, time_signature_counts, on=['region', 'chart_date'], how='left')
-    agg_data = pd.merge(agg_data, genre_counts, on=['region', 'chart_date'], how='left')
+    agg_data = pd.merge(agg_data, key_counts, on=['scope', 'region', 'chart_date'], how='left')
+    agg_data = pd.merge(agg_data, mode_counts, on=['scope', 'region', 'chart_date'], how='left')
+    agg_data = pd.merge(agg_data, time_signature_counts, on=['scope', 'region', 'chart_date'], how='left')
+    agg_data = pd.merge(agg_data, genre_counts, on=['scope', 'region', 'chart_date'], how='left')
 
     agg_data['avg_release_date'] = pd.to_datetime(
         agg_data['avg_release_date'], unit='s', errors='coerce'
