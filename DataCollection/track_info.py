@@ -82,7 +82,7 @@ def query(sp, file_paths):
     song_details = song_to_genre(song_details, artist_genres)
     details_df = pd.DataFrame(song_details)
     details_df = details_df.drop(columns=["artist_id"])
-    results_to_csv(details_df, "data/track_info.csv")
+    results_to_csv(details_df, "data/modified/track_info.csv")
 
 
 if __name__ == "__main__":
@@ -90,8 +90,8 @@ if __name__ == "__main__":
     sp = SpotifyAccess.get_spotify_client()
 
     file_paths = [
-        "DataCollection/data/charts.csv",
-        "DataCollection/data/user_listening.csv"
+        "DataCollection/data/raw/charts.csv",
+        "DataCollection/data/raw/user_listening.csv"
     ]
 
     query(sp, file_paths)

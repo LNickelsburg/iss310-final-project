@@ -69,7 +69,7 @@ def query(sp, limit, long_term, medium_term, short_term, recent):
 
     print("Query complete.")
     output = pd.DataFrame(user_listening)
-    results_to_csv(output, "data/user_listening.csv")
+    results_to_csv(output, "data/raw/user_listening.csv")
 
 
 

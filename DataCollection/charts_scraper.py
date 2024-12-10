@@ -166,8 +166,8 @@ def clean_results(df):
         output.append(flattened.iloc[i].to_dict())
     return output
 
-def results_to_csv(df, path):
-    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/{path}"
+def results_to_csv(df):
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/data/raw/charts.csv"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -228,7 +228,7 @@ def query(authorization, num_weeks, world, country, city):
     #print(charts_data)
     output = pd.DataFrame(charts_data)
     print(output)
-    results_to_csv(output, "data/charts.csv")
+    results_to_csv(output)
 
 
 

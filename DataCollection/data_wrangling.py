@@ -5,11 +5,11 @@ import geopandas as gpd
 ### LOAD DATA ###
 
 def load_data(clean):
-    regional_data = pd.read_csv('DataCollection/data/charts.csv') 
-    user_data = pd.read_csv('DataCollection/data/user_listening.csv') 
-    track_info = pd.read_csv('DataCollection/data/track_info.csv') 
-    track_features = pd.read_csv('DataCollection/data/tracks_features.csv') 
-    countries_geo = gpd.read_file('DataCollection/data/countries.geo.json')
+    regional_data = pd.read_csv('DataCollection/data/raw/charts.csv') 
+    user_data = pd.read_csv('DataCollection/data/raw/user_listening.csv') 
+    track_info = pd.read_csv('DataCollection/data/modified/track_info.csv') 
+    track_features = pd.read_csv('DataCollection/data/modified/tracks_features.csv') 
+    countries_geo = gpd.read_file('DataCollection/data/raw/geospatial/countries.geo.json')
 
     if clean:
         regional_data = clean_regional(regional_data)
@@ -74,7 +74,7 @@ def merge_data():
 def get_datasets():
     regional_data = pd.read_csv('DataCollection/data/regional_data.csv')
     user_data = pd.read_csv('DataCollection/data/user_data.csv')
-    countries_geo = gpd.read_file('DataCollection/data/countries.geo.json')
+    countries_geo = gpd.read_file('DataCollection/data/raw/geospatial/countries.geo.json')
     countries_geo = clean_geo(countries_geo)
     return regional_data, user_data, countries_geo
 
