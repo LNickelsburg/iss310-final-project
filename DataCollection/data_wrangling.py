@@ -31,7 +31,6 @@ def clean_user(data):
 
 def clean_info(data):
     data.rename(columns={'date': 'release_date'}, inplace=True)
-    data.drop(columns=['name'], inplace=True)
     data.drop_duplicates(subset=['uri'], inplace=True)
     return data
 
