@@ -44,25 +44,25 @@ def query(sp, limit, long_term, medium_term, short_term, recent):
         for i, track in enumerate(tracks):
             user_listening["category"].append("long_term")
             user_listening["rank"].append(i+1)
-            user_listening["uri"].append(track['uri'])
+            user_listening["uri"].append(track['uri'].split(":")[-1])
     if medium_term:
         tracks = top_tracks(sp, 'medium_term', limit)
         for i, track in enumerate(tracks):
             user_listening["category"].append("medium_term")
             user_listening["rank"].append(i+1)
-            user_listening["uri"].append(track['uri'])
+            user_listening["uri"].append(track['uri'].split(":")[-1])
     if short_term:
         tracks = top_tracks(sp, 'short_term', limit)
         for i, track in enumerate(tracks):
             user_listening["category"].append("short_term")
             user_listening["rank"].append(i+1)
-            user_listening["uri"].append(track['uri'])
+            user_listening["uri"].append(track['uri'].split(":")[-1])
     if recent:
         tracks = recently_played(sp, limit)
         for i, track in enumerate(tracks):
             user_listening["category"].append("recent")
             user_listening["rank"].append(i+1)
-            user_listening["uri"].append(track['track']['uri'])
+            user_listening["uri"].append(track['track']['uri'].split(":")[-1])
 
 
 

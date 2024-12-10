@@ -197,7 +197,7 @@ def query(authorization, num_weeks, world, country, city):
                     charts_data["date"].append(date)
                     charts_data["region"].append("global")
                     charts_data["rank"].append(result["currentRank"])
-                    charts_data["uri"].append(result["trackUri"])
+                    charts_data["uri"].append(result["trackUri"].split(":")[-1])
         if country:
             print("Querying country data...")
             for country in COUNTRIES:
@@ -209,7 +209,7 @@ def query(authorization, num_weeks, world, country, city):
                         charts_data["date"].append(date)
                         charts_data["region"].append(country)
                         charts_data["rank"].append(result["currentRank"])
-                        charts_data["uri"].append(result["trackUri"])
+                        charts_data["uri"].append(result["trackUri"].split(":")[-1])
         if city:
             print("Querying city data...")
             for state in CITIES:    
@@ -222,7 +222,7 @@ def query(authorization, num_weeks, world, country, city):
                             charts_data["date"].append(date)
                             charts_data["region"].append(city)
                             charts_data["rank"].append(result["currentRank"])
-                            charts_data["uri"].append(result["trackUri"])
+                            charts_data["uri"].append(result["trackUri"].split(":")[-1])
                     
     print("Query complete.")
     #print(charts_data)

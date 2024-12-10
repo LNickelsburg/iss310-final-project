@@ -45,7 +45,7 @@ def songs_and_artists(sp, uris):
             artist_id = track["artists"][0]["id"]
             song_details.append({
                 "name": name,
-                "uri": track["uri"],
+                "uri": track["uri"].split(":")[-1],
                 "date": release_date,
                 "artist_id": artist_id
             })
