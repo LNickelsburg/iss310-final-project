@@ -16,6 +16,7 @@ def load_data(clean):
         user_data = clean_user(user_data)
         track_info = clean_info(track_info)
         track_features = clean_features(track_features)
+        countries_geo = clean_geo(countries_geo)
         
     return regional_data, user_data, track_info, track_features, countries_geo
 
@@ -45,13 +46,13 @@ def clean_geo(data):
 ### MERGE DATA ###
 
 def get_regional(regional, info, features):
-    regional = regional.merge(info, on='uri', how='left')
-    regional = regional.merge(features, on='uri', how='left')
+    regional = regional.merge(info, on='uri', how='inner')
+    regional = regional.merge(features, on='uri', how='inner')
     return regional
 
 def get_user(user, info, features):
-    user = user.merge(info, on='uri', how='left')
-    user = user.merge(features, on='uri', how='left')
+    user = user.merge(info, on='uri', how='inner')
+    user = user.merge(features, on='uri', how='inner')
     return user
 
 def results_to_csv(df, path):
