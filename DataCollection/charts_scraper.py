@@ -132,7 +132,7 @@ CITIES = {
 def set_dates(n):
     today = datetime.now()
     last_thursday = today - timedelta(days=(today.weekday() - 3) % 7)
-    dates = [(last_thursday - timedelta(weeks=26*i)).strftime("%Y-%m-%d") for i in range(n)]
+    dates = [(last_thursday - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(n)]
     return dates
 
 def set_url(query_type, region, date):
@@ -181,6 +181,7 @@ def query(authorization, num_weeks, world, country, city):
 
     charts_data = {
         "date": [],
+        "scope": [],
         "region": [],
         "rank": [],
         "uri": []
@@ -195,6 +196,7 @@ def query(authorization, num_weeks, world, country, city):
                 results = clean_results(charts)
                 for result in results:
                     charts_data["date"].append(date)
+                    charts_data["scope"].append("global")
                     charts_data["region"].append("global")
                     charts_data["rank"].append(result["currentRank"])
                     charts_data["uri"].append(result["trackUri"].split(":")[-1])
@@ -207,6 +209,7 @@ def query(authorization, num_weeks, world, country, city):
                     results = clean_results(charts)
                     for result in results:
                         charts_data["date"].append(date)
+                        charts_data["scope"].append("country")
                         charts_data["region"].append(country)
                         charts_data["rank"].append(result["currentRank"])
                         charts_data["uri"].append(result["trackUri"].split(":")[-1])
@@ -220,6 +223,7 @@ def query(authorization, num_weeks, world, country, city):
                         results = clean_results(charts)
                         for result in results:
                             charts_data["date"].append(date)
+                            charts_data["scope"].append("city")
                             charts_data["region"].append(city)
                             charts_data["rank"].append(result["currentRank"])
                             charts_data["uri"].append(result["trackUri"].split(":")[-1])

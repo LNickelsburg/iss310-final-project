@@ -50,12 +50,12 @@ def get_regional(regional, info, features):
     
     regional_info = regional.merge(info, on='uri', how='left')
     regional_info = regional_info.merge(features, on='uri', how='left')
-    regional_info.drop_duplicates(subset=['chart_date', 'region', 'uri'], inplace=True)
+    regional_info.drop_duplicates(subset=['chart_date', 'scope', 'region', 'uri'], inplace=True)
 
 
     regional_features = regional.merge(features, on='uri', how='inner')
     regional_features = regional_features.merge(info, on='uri', how='left')
-    regional_features.drop_duplicates(subset=['chart_date', 'region', 'uri'], inplace=True)
+    regional_features.drop_duplicates(subset=['chart_date', 'scope', 'region', 'uri'], inplace=True)
 
     return regional_info, regional_features
 
