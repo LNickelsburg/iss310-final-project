@@ -41,10 +41,12 @@ def songs_and_artists(sp, uris):
         tracks = sp.tracks(batch_ids)
         for track in tracks["tracks"]:
             name = track["name"]
+            popularity = track["popularity"]
             release_date = track["album"]["release_date"]
             artist_id = track["artists"][0]["id"]
             song_details.append({
                 "name": name,
+                "popularity": popularity,
                 "uri": track["uri"].split(":")[-1],
                 "date": release_date,
                 "artist_id": artist_id
@@ -93,8 +95,3 @@ if __name__ == "__main__":
     ]
 
     query(sp, file_paths)
-
-
-
-
-

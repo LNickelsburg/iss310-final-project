@@ -37,6 +37,10 @@ def clean_features(data):
     data.rename(columns={'id': 'uri'}, inplace=True)
     return data
 
+def clean_geo(data):
+    data.rename(columns={'name': 'region'}, inplace=True)
+    return data
+
 
 ### MERGE DATA ###
 
@@ -65,8 +69,22 @@ def merge_data():
     results_to_csv(user_data, 'data/user_data.csv')
 
 
+### ACCESS DATA ###
+
+def get_datasets():
+    regional_data = pd.read_csv('DataCollection/data/regional_data.csv')
+    user_data = pd.read_csv('DataCollection/data/user_data.csv')
+    countries_geo = gpd.read_file('DataCollection/data/countries.geo.json')
+    countries_geo = clean_geo(countries_geo)
+    return regional_data, user_data, countries_geo
+
+
+
 if __name__ == '__main__':
-    merge_data()
+    #merge_data()
+
+    regional_data, user_data, countries_geo = get_datasets()
+    print(regional_data.columns)
 
 
     
