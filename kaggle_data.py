@@ -59,5 +59,24 @@ if __name__ == '__main__':
                 "theoverman/the-spotify-hit-predictor-dataset",
                 "tomsezequielrau/spotify-weekly-top-200-audio-features-20172020"
                 ]
-    query(datasets)
+    #query(datasets)
+    
+    path = kagglehub.dataset_download(datasets[4])
+    file_list = os.listdir(path)
+    new_path = None
+    for file in file_list:
+        if file.endswith(".csv"):
+            file = os.path.join(path, file)
+            new_path = file
+            break
+    
+    
+    df = pd.read_csv(new_path)
+    if "id" in df.columns:
+        df.rename(columns={"id": "uri"}, inplace=True)
+    if "track_id" in df.columns:
+        df.rename(columns={"track_id": "uri"}, inplace=True)
+    print(df.columns)
+    df = df[["URL"]]
+    print(df.head())
     
