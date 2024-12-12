@@ -8,7 +8,7 @@ import os
 import sys
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, parent_dir)
-import spotify_access as SpotifyAccess
+import DataCollection.spotify_access as SpotifyAccess
 
 import pandas as pd
 
@@ -28,7 +28,7 @@ def consolidate_uris(files):
 
 
 def results_to_csv(df, path):
-    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/{path}"
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/data/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -82,7 +82,7 @@ def query(sp, file_paths):
     song_details = song_to_genre(song_details, artist_genres)
     details_df = pd.DataFrame(song_details)
     details_df = details_df.drop(columns=["artist_id"])
-    results_to_csv(details_df, "data/modified/track_info.csv")
+    results_to_csv(details_df, "track_info.csv")
 
 
 if __name__ == "__main__":
@@ -90,8 +90,8 @@ if __name__ == "__main__":
     sp = SpotifyAccess.get_spotify_client()
 
     file_paths = [
-        "DataCollection/data/raw/charts.csv",
-        "DataCollection/data/raw/user_listening.csv"
+        "data/charts.csv",
+        "data/user_listening.csv"
     ]
 
     query(sp, file_paths)

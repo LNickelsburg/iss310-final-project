@@ -167,7 +167,7 @@ def clean_results(df):
     return output
 
 def results_to_csv(df):
-    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/data/raw/charts.csv"
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/data/charts.csv"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -180,7 +180,7 @@ def query(authorization, num_weeks, world, country, city):
     dates = set_dates(num_weeks)
 
     charts_data = {
-        "date": [],
+        "chart_date": [],
         "scope": [],
         "region": [],
         "rank": [],
@@ -195,7 +195,7 @@ def query(authorization, num_weeks, world, country, city):
             if charts is not None:
                 results = clean_results(charts)
                 for result in results:
-                    charts_data["date"].append(date)
+                    charts_data["chart_date"].append(date)
                     charts_data["scope"].append("global")
                     charts_data["region"].append("global")
                     charts_data["rank"].append(result["currentRank"])
@@ -208,7 +208,7 @@ def query(authorization, num_weeks, world, country, city):
                 if charts is not None:
                     results = clean_results(charts)
                     for result in results:
-                        charts_data["date"].append(date)
+                        charts_data["chart_date"].append(date)
                         charts_data["scope"].append("country")
                         charts_data["region"].append(country)
                         charts_data["rank"].append(result["currentRank"])
@@ -222,7 +222,7 @@ def query(authorization, num_weeks, world, country, city):
                     if charts is not None:
                         results = clean_results(charts)
                         for result in results:
-                            charts_data["date"].append(date)
+                            charts_data["chart_date"].append(date)
                             charts_data["scope"].append("city")
                             charts_data["region"].append(city)
                             charts_data["rank"].append(result["currentRank"])
@@ -231,15 +231,14 @@ def query(authorization, num_weeks, world, country, city):
     print("Query complete.")
     #print(charts_data)
     output = pd.DataFrame(charts_data)
-    print(output)
     results_to_csv(output)
 
 
 
 if __name__ == '__main__':
 
-    authorization = "Bearer BQDFwm-7xB67fFMSH0ssJ95X8SL_dAgrVfK45Agl6TQBZW0wug1cMYimjpX3w_MDp5tort3PDPYXz_k3vt2Z3nrIM-chbVm8fW15-PoMe-S69yRQ39jpcZZh14GrKKyYzNFba-TeMlGi69W2dA8UtSxHrq5W2kLUJc_nUc3SxIwdfshvTC5UK9nclr3873xV8orb1NOm"
-    num_weeks = 2
+    authorization = "Bearer BQCaZeQ4_1SS-2GphXjo53yu32J7ygFVlnJd6Ox8H3nGw_vfRExVFUBJ91JpSsWGII__lKV71kH28wzavuCZMcfLRbgRjknS26rihdcJC5e-_zVwSExgn4yduA8klVXlbrPAQzw4bMQOJhBseXpMpGVDF0O3XYb-hOt0KKOdr5BMaFne9kiL5cqUfHZ6uB1hrmsy4cM5"
+    num_weeks = 1
     world = True
     country = True
     city = True

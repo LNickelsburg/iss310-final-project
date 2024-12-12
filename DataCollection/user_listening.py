@@ -3,7 +3,7 @@ import os
 import sys
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, parent_dir)
-import spotify_access as SpotifyAccess
+import DataCollection.spotify_access as SpotifyAccess
 
 
 
@@ -23,7 +23,7 @@ def top_tracks(sp, time_range, limit):
 ### HELPERS ###
 
 def results_to_csv(df, path):
-    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/DataCollection/{path}"
+    path = f"C:/Users/lnick/OneDrive/Desktop/Fall 2024/archives as data/final project/data/{path}"
     if df is not None:
         df.to_csv(path, index=False)
 
@@ -69,7 +69,7 @@ def query(sp, limit, long_term, medium_term, short_term, recent):
 
     print("Query complete.")
     output = pd.DataFrame(user_listening)
-    results_to_csv(output, "data/raw/user_listening.csv")
+    results_to_csv(output, "user_listening.csv")
 
 
 
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     scope = "user-read-recently-played user-top-read"
     limit = 3
     long_term = True
-    medium_term = False
-    short_term = False
+    medium_term = True
+    short_term = True
     recent = True
 
     sp = SpotifyAccess.get_spotify_client(scope)

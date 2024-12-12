@@ -1,5 +1,4 @@
 import pandas as pd 
-import geopandas as gpd
 
 
 ### LOAD DATA ###
@@ -9,7 +8,6 @@ def load_data(clean):
     user_data = pd.read_csv('DataCollection/data/raw/user_listening.csv') 
     track_info = pd.read_csv('DataCollection/data/modified/track_info.csv') 
     track_features = pd.read_csv('DataCollection/data/modified/tracks_features.csv') 
-    countries_geo = gpd.read_file('DataCollection/data/raw/geospatial/countries.geo.json')
 
     if clean:
         regional_data = clean_regional(regional_data)
@@ -100,7 +98,6 @@ def get_datasets():
     user_info = pd.read_csv('DataCollection/data/user_info.csv')
     user_features = pd.read_csv('DataCollection/data/user_features.csv')
 
-    countries_geo = gpd.read_file('DataCollection/data/raw/geospatial/countries.geo.json')
     countries_geo = clean_geo(countries_geo)
 
     return regional_info, regional_features, user_info, user_features, countries_geo
