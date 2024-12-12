@@ -131,7 +131,7 @@ CITIES = {
 
 def set_dates(n):
     today = datetime.now()
-    last_thursday = today - timedelta(days=(today.weekday() - 3) % 7)
+    last_thursday = today - timedelta(days=(today.weekday() - 3) % 7) - timedelta(weeks=1)
     dates = [(last_thursday - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(n)]
     return dates
 
@@ -147,6 +147,7 @@ def set_headers(authorization):
 ### HELPERS ###
 
 def request_charts(url, headers):
+    
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         data = response.json() 
@@ -237,11 +238,11 @@ def query(authorization, num_weeks, world, country, city):
 
 if __name__ == '__main__':
 
-    authorization = "Bearer BQCaZeQ4_1SS-2GphXjo53yu32J7ygFVlnJd6Ox8H3nGw_vfRExVFUBJ91JpSsWGII__lKV71kH28wzavuCZMcfLRbgRjknS26rihdcJC5e-_zVwSExgn4yduA8klVXlbrPAQzw4bMQOJhBseXpMpGVDF0O3XYb-hOt0KKOdr5BMaFne9kiL5cqUfHZ6uB1hrmsy4cM5"
+    authorization = "Bearer BQC2MrY3um-R9FBZjoTtn74NmkELLboDiLvEjoDXC5-zbBKIn3dzZ9XrGzCX8gbsk3wdaF4J7Il60NIMPfvujJVs1Ph7YB6dD5ermRlM6rG9RRFUUQ4qSQFExAeHSgRX8yiN1vBkdm5ZzI3zLEsTwFgr3BeP2bsEtFysYyZAJyMqs7FWYDeLgw4TsZs-PvMJsTNrfcuP"
     num_weeks = 1
     world = True
-    country = True
-    city = True
+    country = False
+    city = False
 
     query(authorization, num_weeks, world, country, city)
     
