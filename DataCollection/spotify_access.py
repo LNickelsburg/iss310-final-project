@@ -12,4 +12,4 @@ def get_spotify_client(scope=""):
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
         scope=scope
-    ))
+    ),requests_timeout=10)
